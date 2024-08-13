@@ -43,9 +43,23 @@ elif data_source == "Connect to Database":
         st.error(f"Error: {err}")
 
 if 'df' in locals():
+    # Convert the 'dateTimeUtc' column to datetime format
+    df['dateTimeUtc'] = pd.to_datetime(df['dateTimeUtc'])
+
     # Display the DataFrame (optional)
     st.write("Data Preview:")
     st.write(df)
+
+    # Date picker to select a specific date or choose all
+    date_selection = st.date_input("Select a specific date", value=None, format="YYYY-MM-DD")
+
+    # Filtering DataFrame based on selected date
+    if date_selection:
+        # Filter by the specific date only
+        filtered_df = df[df['dateTimeUtc'].dt.date == date_selection]
+    else:
+        # No specific date selected, show all data
+        filtered_df = df
 
     # Sliders for 'tws' and 'vmg'
     TWS = st.slider("TWS", min_value=8, max_value=20, value=(8, 20))
@@ -55,12 +69,12 @@ if 'df' in locals():
     mode = st.selectbox("Select Mode", options=["UP", "DN"])
 
     # Filter the DataFrame based on the slider values and mode selection
-    filtered_df = df[(df['TWS'] >= TWS[0]) & (df['TWS'] <= TWS[1]) & 
-                     (df['VMG%'] >= vmg[0]) & (df['VMG%'] <= vmg[1]) & 
-                     (df['mode'] == mode)]
+    filtered_df = filtered_df[(filtered_df['TWS'] >= TWS[0]) & (filtered_df['TWS'] <= TWS[1]) & 
+                             (filtered_df['VMG%'] >= vmg[0]) & (filtered_df['VMG%'] <= vmg[1]) & 
+                             (filtered_df['mode'] == mode)]
 
     # Drop down menus for selecting variables
-    variables = df.columns.tolist()
+    variables = filtered_df.columns.tolist()
     x_var = st.selectbox("Select X variable", variables)
     y_var = st.selectbox("Select Y variable", variables)
 
