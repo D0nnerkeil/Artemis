@@ -2,17 +2,47 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt  # Import pyplot submodule
 import seaborn as sns
+import mysql.connector
+from sqlalchemy import create_engine
 
 # Title of the web app
 st.title("Phases")
 
-# File uploader to allow users to upload a CSV file
-uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+# Option to select data source: CSV or Database
+data_source = st.selectbox("Select Data Source", ["Upload CSV", "Connect to Database"])
 
-if uploaded_file is not None:
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(uploaded_file)
+# Load data from CSV
+if data_source == "Upload CSV":
+    # File uploader to allow users to upload a CSV file
+    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
+    if uploaded_file is not None:
+        # Read the CSV file into a DataFrame
+        df = pd.read_csv(uploaded_file)
+
+# Load data from Database
+elif data_source == "Connect to Database":
+    # Database connection details
+    MYSQL_HOST = "sailing-performance.artemisracing.com"
+    MYSQL_PORT = 3306
+    MYSQL_USR = "admin"
+    MYSQL_PWD = "Vh&bxj07oiFNFP;Jg+BZ"
+    MYSQL_SCHEMA = "ac40"
+
+    try:
+        # Create a connection to the database
+        engine = create_engine(f"mysql+mysqlconnector://{MYSQL_USR}:{MYSQL_PWD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_SCHEMA}")
+        
+        # Query to fetch data
+        query = "SELECT * FROM ac40.stats_phases;"
+        
+        # Read the data into a DataFrame
+        df = pd.read_sql(query, engine)
+        
+    except mysql.connector.Error as err:
+        st.error(f"Error: {err}")
+
+if 'df' in locals():
     # Display the DataFrame (optional)
     st.write("Data Preview:")
     st.write(df)
@@ -34,7 +64,7 @@ if uploaded_file is not None:
     x_var = st.selectbox("Select X variable", variables)
     y_var = st.selectbox("Select Y variable", variables)
 
-    #Drop down for the interpolation
+    # Drop down for the interpolation
     order = int(st.selectbox("Select interpolation", options=["1","2","3","4","5","6"], index=1))
 
     # Ensure that both x_var and y_var are defined before proceeding
