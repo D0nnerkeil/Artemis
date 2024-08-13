@@ -34,10 +34,13 @@ if uploaded_file is not None:
     x_var = st.selectbox("Select X variable", variables)
     y_var = st.selectbox("Select Y variable", variables)
 
+    #Drop down for the interpolation
+    order = int(st.selectbox("Select interpolation", options=["1","2","3","4","5","6"], index=1))
+
     # Ensure that both x_var and y_var are defined before proceeding
     if x_var and y_var:
         # Create the lmplot using seaborn without the hue parameter
-        plot = sns.lmplot(data=filtered_df, x=x_var, y=y_var, order=2)
+        plot = sns.lmplot(data=filtered_df, x=x_var, y=y_var, order=order)
 
         # Display the plot using Streamlit
         st.pyplot(plot.fig)
