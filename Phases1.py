@@ -37,13 +37,14 @@ elif data_source == "Connect to Database":
         query = "SELECT * FROM ac40.stats_phases;"
         
         # Read the data into a DataFrame
-        df = pd.read_sql(query, engine)
+        st.session_state[df] = pd.read_sql(query, engine)
         
     except mysql.connector.Error as err:
         st.error(f"Error: {err}")
 
 if 'df' in locals():
     # Convert the 'dateTimeUtc' column to datetime format
+    df = st.session_state[df].copy()
     df['dateTimeUtc'] = pd.to_datetime(df['dateTimeUtc'])
 
     # Display the DataFrame (optional)
