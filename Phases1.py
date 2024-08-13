@@ -6,7 +6,7 @@ import mysql.connector
 from sqlalchemy import create_engine
 
 # Title of the web app
-st.title("Phases")
+st.title("Phases Analysis")
 
 # Option to select data source: CSV or Database
 data_source = st.selectbox("Select Data Source", ["Upload CSV", "Connect to Database"])
