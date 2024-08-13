@@ -62,7 +62,7 @@ if 'df' in locals():
         filtered_df = df
 
     # Sliders for 'tws' and 'vmg'
-    TWS = st.slider("TWS", min_value=8, max_value=20, value=(8, 20))
+    TWS = st.slider("TWS", min_value=6, max_value=20, value=(6, 20))
     vmg = st.slider("VMG%", min_value=0.8, max_value=1.5, value=(0.8, 1.5))
     
     # Dropdown for selecting upwind or downwind
