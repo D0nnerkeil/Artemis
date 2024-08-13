@@ -3,5 +3,5 @@ pandas
 matplotlib
 seaborn
 numpy
-mysqlclient  # Use one of mysqlclient, pymysql, or mysql-connector-python based on your needs
+mysql-connector-python  # Use one of mysqlclient, pymysql, or mysql-connector-python based on your needs
 sqlalchemy
