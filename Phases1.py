@@ -50,19 +50,21 @@ if 'df' in locals():
     st.write("Data Preview:")
     st.write(df)
 
-    # Date picker to select a specific date or choose all
-    date_selection = st.date_input("Select a specific date", value=None, format="YYYY-MM-DD")
+    # Get a list of unique dates for multiselect
+    unique_dates = df['dateTimeUtc'].dt.date.unique()
+    unique_dates.sort()  # Sort dates for better user experience
 
-    # Filtering DataFrame based on selected date
-    if date_selection:
-        # Filter by the specific date only
-        filtered_df = df[df['dateTimeUtc'].dt.date == date_selection]
+    # Multi-select widget for selecting multiple dates
+    selected_dates = st.multiselect("Select dates", options=unique_dates, default=unique_dates)
+
+    # Filtering DataFrame based on selected dates
+    if selected_dates:
+        filtered_df = df[df['dateTimeUtc'].dt.date.isin(selected_dates)]
     else:
-        # No specific date selected, show all data
         filtered_df = df
 
     # Sliders for 'tws' and 'vmg'
-    TWS = st.slider("TWS", min_value=6, max_value=20, value=(6, 20))
+    TWS = st.slider("TWS", min_value=8, max_value=20, value=(8, 20))
     vmg = st.slider("VMG%", min_value=0.8, max_value=1.5, value=(0.8, 1.5))
     
     # Dropdown for selecting upwind or downwind
