@@ -3,5 +3,5 @@ pandas
 matplotlib
 seaborn
 numpy
-mysql.connector
+mysql
 sqlalchemy
